@@ -3,18 +3,16 @@ import nodemailer from 'nodemailer';
 const sendEmail = async (options) => {
   try {
     const transporter = nodemailer.createTransport({
-      // Using raw Google IP to bypass local Antivirus/Firewall DNS interception!
-      host: '192.178.211.108',
+      host: 'smtp.gmail.com',
       port: 587,
-      secure: false, 
-      requireTLS: true,
+      secure: false,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
       },
-      tls: {
-       rejectUnauthorized: false
-      }
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
     });
 
     const mailOptions = {

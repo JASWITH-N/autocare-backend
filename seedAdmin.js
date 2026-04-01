@@ -1,9 +1,7 @@
 import mongoose from 'mongoose';
 import User from './models/User.js';
-import dotenv from 'dotenv';
-dotenv.config();
 
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect('mongodb://127.0.0.1:27017/vmsb')
   .then(async () => {
     try {
       // Check if admin exists

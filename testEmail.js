@@ -1,17 +1,36 @@
-import sendEmail from './utils/sendEmail.js';
-import dotenv from 'dotenv';
-dotenv.config();
+import nodemailer from 'nodemailer';
 
-console.log('Testing email dispatch with:', process.env.SMTP_USER);
+const test = async () => {
+    try {
+        const transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            auth: {
+                user: 'jaswithnimmala1811@gmail.com',
+                pass: 'zdjzdyepknfpvzzf'
+            },
+            tls: {
+                rejectUnauthorized: false
+            }
+        });
 
-sendEmail({
-  email: process.env.SMTP_USER, // send to self
-  subject: 'Test Configuration',
-  message: 'If you see this, Nodemailer is securely connected!'
-}).then(() => {
-  console.log('Test function execution complete (Check above for actual Message Sent logs)');
-  process.exit();
-}).catch(e => {
-  console.error('Fatal execution error:', e);
-  process.exit(1);
-});
+        // FORCE node to use IPv4 instead of timing out on broken IPv6 networks.
+        import('dns').then(dns => dns.setDefaultResultOrder('ipv4first'));
+
+        console.log('Attempting alternative strictly IPv4 DNS delivery...');
+        const info = await transporter.sendMail({
+            from: '"AutoCare App" <jaswithnimmala1811@gmail.com>',
+            to: 'jaswithnimmala1811@gmail.com',
+            subject: 'Direct Delivery Test',
+            text: 'This is a test OTP.'
+        });
+        console.log('SUCCESS! Sent verification to', info.messageId);
+        process.exit();
+    } catch (e) {
+        console.error('SMTP Error Output:', e);
+        process.exit(1);
+    }
+};
+
+test();
